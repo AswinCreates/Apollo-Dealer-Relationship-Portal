@@ -17,7 +17,8 @@ public class User {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Column(name = "first_login")
     private Boolean firstLogin = true;
@@ -53,11 +54,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
+    public UserRole getRole() {
+    return role;
+}
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
