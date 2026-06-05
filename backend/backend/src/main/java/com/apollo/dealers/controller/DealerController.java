@@ -19,11 +19,32 @@ public class DealerController {
 
     @PostMapping
     public Dealer createDealer(@RequestBody Dealer dealer) {
-        return dealerService.saveDealer(dealer);
+        return dealerService.createDealer(dealer);
     }
 
     @GetMapping
     public List<Dealer> getAllDealers() {
         return dealerService.getAllDealers();
+    }
+
+    @GetMapping("/{id}")
+    public Dealer getDealerById(@PathVariable Long id) {
+        return dealerService.getDealerById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Dealer updateDealer(
+            @PathVariable Long id,
+            @RequestBody Dealer dealer) {
+
+        return dealerService.updateDealer(id, dealer);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteDealer(@PathVariable Long id) {
+
+        dealerService.deleteDealer(id);
+
+        return "Dealer deleted successfully.";
     }
 }
