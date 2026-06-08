@@ -4,38 +4,38 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.apollo.dealers.entity.Dealer;
-import com.apollo.dealers.service.DealerService;
+import com.apollo.dealers.entity.Contractor;
+import com.apollo.dealers.service.ContractorService;
 
 @RestController
 @RequestMapping("/api/dealers")
-public class DealerController {
+public class ContractorController {
 
-    private final DealerService dealerService;
+    private final ContractorService dealerService;
 
-    public DealerController(DealerService dealerService) {
+    public ContractorController(ContractorService dealerService) {
         this.dealerService = dealerService;
     }
 
     @PostMapping
-    public Dealer createDealer(@RequestBody Dealer dealer) {
+    public Contractor createDealer(@RequestBody Contractor dealer) {
         return dealerService.createDealer(dealer);
     }
 
     @GetMapping
-    public List<Dealer> getAllDealers() {
+    public List<Contractor> getAllDealers() {
         return dealerService.getAllDealers();
     }
 
     @GetMapping("/{id}")
-    public Dealer getDealerById(@PathVariable Long id) {
+    public Contractor getDealerById(@PathVariable Long id) {
         return dealerService.getDealerById(id);
     }
 
     @PutMapping("/{id}")
-    public Dealer updateDealer(
+    public Contractor updateDealer(
             @PathVariable Long id,
-            @RequestBody Dealer dealer) {
+            @RequestBody Contractor dealer) {
 
         return dealerService.updateDealer(id, dealer);
     }

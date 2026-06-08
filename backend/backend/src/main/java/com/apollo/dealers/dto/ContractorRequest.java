@@ -1,6 +1,6 @@
 package com.apollo.dealers.dto;
 
-public class DealerRequest {
+public class ContractorRequest {
 
     private String dealerName;
     private String shopName;

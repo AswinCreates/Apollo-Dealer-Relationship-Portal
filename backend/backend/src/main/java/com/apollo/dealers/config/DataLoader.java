@@ -21,12 +21,25 @@ public class DataLoader {
 
                 admin.setName("Apollo Admin");
                 admin.setEmail("admin@apollo.com");
+
+                // Login Credentials
+                admin.setVendorCode("ADM001");
                 admin.setPassword("admin123");
+
+                // Role
                 admin.setRole(UserRole.ADMIN);
+
+                // Account Status
+                admin.setFirstLogin(false);
+                admin.setActive(true);
 
                 userRepository.save(admin);
 
-                System.out.println("Default Admin Created!");
+                System.out.println("==================================");
+                System.out.println(" Default Admin Created!");
+                System.out.println(" Vendor Code : ADM001");
+                System.out.println(" Password    : admin123");
+                System.out.println("==================================");
             }
 
         };

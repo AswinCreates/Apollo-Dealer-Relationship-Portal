@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dealers")
-public class Dealer {
+public class Contractor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class Dealer {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Dealer() {
+    public Contractor() {
     }
 
     public Long getDealerId() {

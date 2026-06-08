@@ -15,6 +15,9 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
+    private String vendorCode;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -23,8 +26,14 @@ public class User {
     @Column(name = "first_login")
     private Boolean firstLogin = true;
 
+    private Boolean active = true;
+
     public User() {
     }
+
+    // ==========================
+    // Getters
+    // ==========================
 
     public Long getId() {
         return id;
@@ -34,39 +43,59 @@ public class User {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getVendorCode() {
+        return vendorCode;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public UserRole getRole() {
-    return role;
-}
-
-    public void setRole(UserRole role) {
-        this.role = role;
+        return role;
     }
 
     public Boolean getFirstLogin() {
         return firstLogin;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    // ==========================
+    // Setters
+    // ==========================
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setVendorCode(String vendorCode) {
+        this.vendorCode = vendorCode;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     public void setFirstLogin(Boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

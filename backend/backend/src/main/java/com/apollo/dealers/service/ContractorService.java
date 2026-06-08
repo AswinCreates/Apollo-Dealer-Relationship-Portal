@@ -4,34 +4,34 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.apollo.dealers.entity.Dealer;
-import com.apollo.dealers.repository.DealerRepository;
+import com.apollo.dealers.entity.Contractor;
+import com.apollo.dealers.repository.ContractorRepository;
 
 @Service
-public class DealerService {
+public class ContractorService {
 
-    private final DealerRepository dealerRepository;
+    private final ContractorRepository dealerRepository;
 
-    public DealerService(DealerRepository dealerRepository) {
+    public ContractorService(ContractorRepository dealerRepository) {
         this.dealerRepository = dealerRepository;
     }
 
-    public Dealer createDealer(Dealer dealer) {
+    public Contractor createDealer(Contractor dealer) {
         return dealerRepository.save(dealer);
     }
 
-    public List<Dealer> getAllDealers() {
+    public List<Contractor> getAllDealers() {
         return dealerRepository.findAll();
     }
 
-    public Dealer getDealerById(Long id) {
+    public Contractor getDealerById(Long id) {
         return dealerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Dealer not found"));
     }
 
-    public Dealer updateDealer(Long id, Dealer dealer) {
+    public Contractor updateDealer(Long id, Contractor dealer) {
 
-        Dealer existingDealer = getDealerById(id);
+        Contractor existingDealer = getDealerById(id);
 
         existingDealer.setDealerName(dealer.getDealerName());
         existingDealer.setShopName(dealer.getShopName());
