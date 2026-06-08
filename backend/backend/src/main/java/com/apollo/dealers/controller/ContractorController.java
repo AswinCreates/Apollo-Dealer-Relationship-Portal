@@ -8,43 +8,48 @@ import com.apollo.dealers.entity.Contractor;
 import com.apollo.dealers.service.ContractorService;
 
 @RestController
-@RequestMapping("/api/dealers")
+@RequestMapping("/api/contractors")
 public class ContractorController {
 
-    private final ContractorService dealerService;
+    private final ContractorService contractorService;
 
-    public ContractorController(ContractorService dealerService) {
-        this.dealerService = dealerService;
+    public ContractorController(ContractorService contractorService) {
+        this.contractorService = contractorService;
     }
 
+    // Create Contractor
     @PostMapping
-    public Contractor createDealer(@RequestBody Contractor dealer) {
-        return dealerService.createDealer(dealer);
+    public Contractor createContractor(@RequestBody Contractor contractor) {
+        return contractorService.createContractor(contractor);
     }
 
+    // Get All Contractors
     @GetMapping
-    public List<Contractor> getAllDealers() {
-        return dealerService.getAllDealers();
+    public List<Contractor> getAllContractors() {
+        return contractorService.getAllContractors();
     }
 
+    // Get Contractor By Id
     @GetMapping("/{id}")
-    public Contractor getDealerById(@PathVariable Long id) {
-        return dealerService.getDealerById(id);
+    public Contractor getContractorById(@PathVariable Long id) {
+        return contractorService.getContractorById(id);
     }
 
+    // Update Contractor
     @PutMapping("/{id}")
-    public Contractor updateDealer(
+    public Contractor updateContractor(
             @PathVariable Long id,
-            @RequestBody Contractor dealer) {
+            @RequestBody Contractor contractor) {
 
-        return dealerService.updateDealer(id, dealer);
+        return contractorService.updateContractor(id, contractor);
     }
 
+    // Delete Contractor
     @DeleteMapping("/{id}")
-    public String deleteDealer(@PathVariable Long id) {
+    public String deleteContractor(@PathVariable Long id) {
 
-        dealerService.deleteDealer(id);
+        contractorService.deleteContractor(id);
 
-        return "Dealer deleted successfully.";
+        return "Contractor deleted successfully.";
     }
 }
