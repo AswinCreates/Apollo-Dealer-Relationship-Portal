@@ -8,42 +8,61 @@ public class Contractor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dealer_id")
     private Long contractorId;
 
+    @Column(name = "client_name")
     private String clientName;
 
+    @Column(name = "contractor_name")
     private String contractorName;
 
+    @Column(name = "owner_name")
     private String ownerName;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "nature_of_job")
     private String natureOfJob;
 
+    @Column(name = "engagement_date")
     private String engagementDate;
 
+    @Column(name = "agreement_period")
     private String agreementPeriod;
 
+    @Column(name = "license_number")
     private String licenseNumber;
 
+    @Column(name = "license_strength")
     private Integer licenseStrength;
 
+    @Column(name = "head_count")
     private Integer headCount;
 
+    @Column(name = "license_validity")
     private String licenseValidity;
 
+    @Column(name = "registration_certificate_strength")
     private Integer registrationCertificateStrength;
 
+    @Column(name = "contract_validity")
     private String contractValidity;
 
+    @Column(name = "epf_code")
     private String epfCode;
 
+    @Column(name = "esic_code")
     private String esicCode;
 
+    @Column(name = "lwf_code")
     private String lwfCode;
 
+    @Column(name = "pt_code_establishment")
     private String ptCodeEstablishment;
 
+    @Column(name = "pt_code_employer")
     private String ptCodeEmployer;
 
     @OneToOne
@@ -52,10 +71,6 @@ public class Contractor {
 
     public Contractor() {
     }
-
-    // ======================
-    // Getters
-    // ======================
 
     public Long getContractorId() {
         return contractorId;
@@ -136,10 +151,6 @@ public class Contractor {
     public User getUser() {
         return user;
     }
-
-    // ======================
-    // Setters
-    // ======================
 
     public void setClientName(String clientName) {
         this.clientName = clientName;

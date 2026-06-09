@@ -3,6 +3,7 @@ package com.apollo.dealers.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.apollo.dealers.entity.User;
 import com.apollo.dealers.entity.UserRole;
@@ -10,6 +11,12 @@ import com.apollo.dealers.repository.UserRepository;
 
 @Configuration
 public class DataLoader {
+
+    private final PasswordEncoder passwordEncoder;
+
+    public DataLoader(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository) {
@@ -24,7 +31,7 @@ public class DataLoader {
 
                 // Login Credentials
                 admin.setVendorCode("ADM001");
-                admin.setPassword("admin123");
+                admin.setPassword(passwordEncoder.encode("admin123"));
 
                 // Role
                 admin.setRole(UserRole.ADMIN);
@@ -41,7 +48,6 @@ public class DataLoader {
                 System.out.println(" Password    : admin123");
                 System.out.println("==================================");
             }
-
         };
     }
 }
