@@ -28,6 +28,17 @@ public class TaskSubmission {
     @Column(name = "submission_date")
     private LocalDate submissionDate;
 
+    // Supervisor Review Fields
+
+    @Column(name = "approved")
+    private Boolean approved;
+
+    @Column(name = "review_date")
+    private LocalDate reviewDate;
+
+    @Column(name = "supervisor_remarks")
+    private String supervisorRemarks;
+
     public TaskSubmission() {
     }
 
@@ -73,5 +84,29 @@ public class TaskSubmission {
 
     public void setSubmissionDate(LocalDate submissionDate) {
         this.submissionDate = submissionDate;
+    }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
+    }
+
+    public LocalDate getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(LocalDate reviewDate) {
+        this.reviewDate = reviewDate;
+    }
+
+    public String getSupervisorRemarks() {
+        return supervisorRemarks;
+    }
+
+    public void setSupervisorRemarks(String supervisorRemarks) {
+        this.supervisorRemarks = supervisorRemarks;
     }
 }

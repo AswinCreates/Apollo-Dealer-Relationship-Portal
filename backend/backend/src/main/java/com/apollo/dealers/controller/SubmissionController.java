@@ -1,9 +1,12 @@
 package com.apollo.dealers.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
 import com.apollo.dealers.entity.TaskSubmission;
 import com.apollo.dealers.service.SubmissionService;
@@ -35,5 +38,40 @@ public class SubmissionController {
                 assignmentId,
                 remarks,
                 file);
+    }
+
+    // =====================================
+    // GET SUBMISSION BY ASSIGNMENT
+    // =====================================
+
+    @GetMapping("/assignment/{assignmentId}")
+    public TaskSubmission getSubmission(
+            @PathVariable Long assignmentId) {
+
+        return submissionService
+                .getSubmissionByAssignment(assignmentId);
+    }
+
+    // =====================================
+    // GET ALL SUBMISSIONS
+    // =====================================
+
+    @GetMapping
+    public List<TaskSubmission> getAllSubmissions() {
+
+        return submissionService
+                .getAllSubmissions();
+    }
+
+    // =====================================
+    // DOWNLOAD DOCUMENT
+    // =====================================
+
+    @GetMapping("/download/{submissionId}")
+    public ResponseEntity<Resource> downloadDocument(
+            @PathVariable Long submissionId)
+            throws IOException {
+
+        return submissionService.downloadFile(submissionId);
     }
 }

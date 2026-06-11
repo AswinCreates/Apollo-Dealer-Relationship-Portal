@@ -5,14 +5,12 @@ public class LoginRequest {
     private String vendorCode;
     private String password;
 
-    public LoginRequest() {
-    }
-
     public String getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(String vendorCode) {
+    public void setVendorCode(
+            String vendorCode) {
         this.vendorCode = vendorCode;
     }
 
@@ -20,7 +18,8 @@ public class LoginRequest {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(
+            String password) {
         this.password = password;
     }
 }
