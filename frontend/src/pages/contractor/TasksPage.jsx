@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 
 import {
 FileText,
-Calendar,
-ChevronRight
+Calendar
 } from "lucide-react";
 
 import { getAssignedTasks }
@@ -20,12 +19,6 @@ const [tasks, setTasks] =
 
 const [loading, setLoading] =
     useState(true);
-
-useEffect(() => {
-
-    loadTasks();
-
-}, []);
 
 const loadTasks = async () => {
 
@@ -55,17 +48,26 @@ const loadTasks = async () => {
     }
 };
 
+useEffect(() => {
+
+    const id = setTimeout(() => {
+        loadTasks();
+    }, 0);
+
+    return () => clearTimeout(id);
+
+}, []);
+
 if (loading) {
 
     return (
 
-        <div className="min-h-screen bg-slate-950 flex justify-center items-center">
+        <div className="min-h-screen min-h-[100dvh] bg-[#0f172a] flex items-center justify-center">
 
-            <h1 className="text-white text-xl">
-
-                Loading Tasks...
-
-            </h1>
+            <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 rounded-full border-[3px] border-white/10 border-t-[#f97316] animate-spin" />
+                <p className="text-white/40 text-[14px] font-medium">Loading Tasks...</p>
+            </div>
 
         </div>
     );
@@ -73,49 +75,66 @@ if (loading) {
 
 return (
 
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700 p-5">
+<div className="min-h-screen min-h-[100dvh] bg-[#0f172a] relative overflow-hidden ambient-glow">
 
-        <div className="max-w-md mx-auto">
+    <div className="max-w-[400px] mx-auto px-5 pt-5 pb-28">
 
-            <div className="mb-8">
+            <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-7"
+            >
 
-                <h1 className="text-white text-3xl font-bold">
+                <h1 className="text-white text-[28px] font-extrabold tracking-[-0.5px]">
 
                     My Tasks
 
                 </h1>
 
-                <p className="text-slate-300 mt-2">
+                <p className="text-white/40 mt-1 text-[14px]">
 
                     Assigned Compliance Activities
 
                 </p>
 
-            </div>
+            </motion.div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-3">
 
                 {tasks.length === 0 ? (
 
-                    <div
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
                         className="
-                        bg-white/10
-                        backdrop-blur-xl
-                        border
-                        border-white/20
-                        rounded-3xl
-                        p-6
-                        text-center
-                    "
+                            bg-white/[0.05]
+                            backdrop-blur-2xl
+                            border
+                            border-white/[0.08]
+                            rounded-[20px]
+                            p-8
+                            text-center
+                        "
                     >
 
-                        <p className="text-slate-300">
+                        <div className="w-14 h-14 rounded-[16px] bg-white/[0.06] flex items-center justify-center mx-auto mb-4">
+                            <FileText size={24} className="text-white/25" />
+                        </div>
+
+                        <p className="text-white/40 text-[15px] font-medium">
 
                             No Tasks Assigned
 
                         </p>
 
-                    </div>
+                        <p className="text-white/25 text-[13px] mt-1">
+
+                            Check back later for new assignments
+
+                        </p>
+
+                    </motion.div>
 
                 ) : (
 
@@ -124,54 +143,50 @@ return (
 
                             <motion.div
                                 key={task.id}
-                                initial={{
-                                    opacity: 0,
-                                    y: 20
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                    y: 0
-                                }}
+                                initial={{ opacity: 0, y: 16, scale: 0.97 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
                                 transition={{
-                                    delay:
-                                        index * 0.08
+                                    delay: 0.1 + index * 0.06,
+                                    duration: 0.45,
+                                    ease: [0.22, 1, 0.36, 1]
                                 }}
+                                whileTap={{ scale: 0.98 }}
                                 onClick={() =>
                                     navigate(
                                         `/contractor/task/${task.id}`
                                     )
                                 }
                                 className="
-                                cursor-pointer
-                                bg-white/10
-                                backdrop-blur-xl
-                                border
-                                border-white/20
-                                rounded-3xl
-                                p-5
-                                shadow-xl
-                                hover:bg-white/15
-                                transition
-                            "
+                                    cursor-pointer
+                                    bg-white/[0.05]
+                                    backdrop-blur-2xl
+                                    border
+                                    border-white/[0.08]
+                                    rounded-[20px]
+                                    p-[18px]
+                                    shadow-[0_4px_16px_rgba(0,0,0,0.2)]
+                                    transition-all
+                                    duration-200
+                                    hover:bg-white/[0.08]
+                                    hover:border-white/[0.14]
+                                    active:bg-white/[0.10]
+                                "
                             >
 
                                 <div className="flex justify-between items-start">
 
-                                    <div>
+                                    <div className="flex-1 min-w-0 pr-3">
 
-                                        <div className="flex items-center gap-2 mb-3">
+                                        <div className="flex items-center gap-2.5 mb-2.5">
 
-                                            <FileText
-                                                size={20}
-                                                className="text-orange-400"
-                                            />
+                                            <div className="w-9 h-9 rounded-[10px] bg-[rgba(249,115,22,0.12)] flex items-center justify-center flex-shrink-0">
+                                                <FileText
+                                                    size={18}
+                                                    className="text-[#fb923c]"
+                                                />
+                                            </div>
 
-                                            <h3
-                                                className="
-                                                text-white
-                                                font-semibold
-                                            "
-                                            >
+                                            <h3 className="text-white font-semibold text-[16px] leading-tight truncate">
 
                                                 {
                                                     task
@@ -185,55 +200,50 @@ return (
 
                                         <div
                                             className="
-                                            flex
-                                            items-center
-                                            gap-2
-                                            text-slate-300
-                                            text-sm
-                                        "
+                                                flex
+                                                items-center
+                                                gap-1.5
+                                                text-white/40
+                                                text-[13px]
+                                                ml-[46px]
+                                            "
                                         >
 
-                                            <Calendar
-                                                size={16}
-                                            />
+                                            <Calendar size={14} />
 
-                                            Due:
-                                            {" "}
-                                            {
-                                                task.dueDate
-                                            }
-
-                                        </div>
-
-                                        <div className="mt-4">
-
-                                            <span
-                                                className="
-                                                bg-orange-500
-                                                text-white
-                                                px-3
-                                                py-1
-                                                rounded-full
-                                                text-xs
-                                            "
-                                            >
-
-                                                {
-                                                    task.status
-                                                }
-
-                                            </span>
+                                            <span>Due: {task.dueDate}</span>
 
                                         </div>
 
                                     </div>
 
-                                    <ChevronRight
-                                        className="
-                                        text-white
-                                        mt-1
-                                    "
-                                    />
+                                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
+
+                                        <svg className="w-5 h-5 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                        </svg>
+
+                                        <span
+                                            className="
+                                                inline-flex
+                                                items-center
+                                                px-2.5
+                                                py-1
+                                                rounded-[8px]
+                                                text-[11px]
+                                                font-semibold
+                                                bg-[rgba(249,115,22,0.12)]
+                                                text-[#fb923c]
+                                                border
+                                                border-[rgba(249,115,22,0.2)]
+                                            "
+                                        >
+
+                                            {task.status}
+
+                                        </span>
+
+                                    </div>
 
                                 </div>
 

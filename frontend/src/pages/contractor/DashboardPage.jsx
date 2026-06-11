@@ -17,12 +17,6 @@ const navigate = useNavigate();
 const [report, setReport] = useState(null);
 const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-
-    loadDashboard();
-
-}, []);
-
 const loadDashboard = async () => {
 
     try {
@@ -52,15 +46,27 @@ const loadDashboard = async () => {
     }
 };
 
+useEffect(() => {
+
+    // defer dashboard load to avoid calling setState synchronously within the effect
+    const id = setTimeout(() => {
+        loadDashboard();
+    }, 0);
+
+    return () => clearTimeout(id);
+
+}, []);
+
 if (loading) {
 
     return (
 
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="min-h-screen min-h-[100dvh] bg-[#0f172a] flex items-center justify-center">
 
-            <h1 className="text-white text-xl">
-                Loading Dashboard...
-            </h1>
+            <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 rounded-full border-[3px] border-white/10 border-t-[#f97316] animate-spin" />
+                <p className="text-white/40 text-[14px] font-medium">Loading Dashboard...</p>
+            </div>
 
         </div>
     );
@@ -91,27 +97,29 @@ const stats = [
 
 return (
 
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700 p-5">
-
-        <div className="max-w-md mx-auto">
+<div className="min-h-screen min-h-[100dvh] bg-[#0f172a] relative overflow-hidden ambient-glow">
+      
+      <div className="max-w-[400px] mx-auto px-5 pt-5 pb-28">
 
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mb-8"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-7"
             >
 
-                <h1 className="text-white text-3xl font-bold">
+                <h1 className="text-white text-[28px] font-extrabold tracking-[-0.5px]">
                     Dashboard
                 </h1>
 
-                <p className="text-slate-300 mt-2">
+                <p className="text-white/40 mt-1 text-[14px]">
                     Compliance Overview
                 </p>
 
             </motion.div>
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-3">
 
                 {stats.map((item, index) => {
 
@@ -121,38 +129,33 @@ return (
 
                         <motion.div
                             key={item.title}
-                            initial={{
-                                opacity: 0,
-                                y: 20
-                            }}
-                            animate={{
-                                opacity: 1,
-                                y: 0
-                            }}
+                            initial={{ opacity: 0, y: 16, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{
-                                delay: index * 0.1
+                                delay: 0.1 + index * 0.08,
+                                duration: 0.5,
+                                ease: [0.22, 1, 0.36, 1]
                             }}
                             className="
-                                backdrop-blur-xl
-                                bg-white/10
+                                bg-white/[0.05]
+                                backdrop-blur-2xl
                                 border
-                                border-white/20
-                                rounded-3xl
-                                p-5
-                                shadow-xl
+                                border-white/[0.08]
+                                rounded-[18px]
+                                p-[18px]
+                                shadow-[0_4px_16px_rgba(0,0,0,0.2)]
                             "
                         >
 
-                            <Icon
-                                size={28}
-                                className="text-white mb-3"
-                            />
+                            <div className="w-10 h-10 rounded-[12px] bg-white/[0.08] flex items-center justify-center mb-3">
+                                <Icon size={20} className="text-[#fb923c]" />
+                            </div>
 
-                            <h3 className="text-slate-300 text-sm">
+                            <h3 className="text-white/45 text-[12px] font-semibold uppercase tracking-[0.06em]">
                                 {item.title}
                             </h3>
 
-                            <p className="text-white text-3xl font-bold mt-2">
+                            <p className="text-white text-[28px] font-extrabold mt-1 tracking-[-0.5px]">
                                 {item.value}
                             </p>
 
@@ -164,73 +167,92 @@ return (
 
             </div>
 
-            <div
+            {/* Progress Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 className="
-                    mt-6
-                    backdrop-blur-xl
-                    bg-white/10
+                    mt-4
+                    bg-white/[0.05]
+                    backdrop-blur-2xl
                     border
-                    border-white/20
-                    rounded-3xl
-                    p-5
+                    border-white/[0.08]
+                    rounded-[20px]
+                    p-[20px]
+                    shadow-[0_4px_16px_rgba(0,0,0,0.2)]
                 "
             >
 
-                <h2 className="text-white font-semibold text-lg mb-4">
+                <h2 className="text-white font-bold text-[17px] mb-5">
                     Compliance Progress
                 </h2>
 
-                <div className="w-full bg-white/10 rounded-full h-4">
+                <div className="progress-track">
 
                     <div
-                        className="bg-orange-500 h-4 rounded-full"
+                        className="progress-fill"
                         style={{
-                            width:
-                                `${report?.compliancePercentage || 0}%`
+                            width: `${report?.compliancePercentage || 0}%`
                         }}
                     />
 
                 </div>
 
-                <p className="text-slate-300 mt-3">
+                <div className="flex items-center justify-between mt-3">
 
-                    {report?.compliancePercentage?.toFixed(1) || 0}%
+                    <p className="text-white/60 text-[14px] font-medium">
 
-                    {" "}Completed
+                        {report?.compliancePercentage?.toFixed(1) || 0}%
 
-                </p>
+                        {" "}Completed
 
-                <p className="text-slate-400 text-sm mt-2">
+                    </p>
 
-                    Total Tasks :
-                    {" "}
-                    {report?.totalTasks || 0}
+                    <p className="text-white/35 text-[13px]">
 
-                </p>
+                        Total: {report?.totalTasks || 0}
 
-            </div>
+                    </p>
 
-            <button
-                onClick={() =>
-                    navigate("/contractor/tasks")
-                }
-                className="
-                    w-full
-                    mt-6
-                    bg-orange-500
-                    hover:bg-orange-600
-                    transition
-                    text-white
-                    py-4
-                    rounded-2xl
-                    font-semibold
-                    shadow-lg
-                "
+                </div>
+
+            </motion.div>
+
+            {/* CTA Button */}
+            <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-
-                View Assigned Tasks
-
-            </button>
+                <button
+                    onClick={() => navigate("/contractor/tasks")}
+                    className="
+                        w-full
+                        mt-5
+                        py-[16px]
+                        rounded-[16px]
+                        font-bold
+                        text-[16px]
+                        text-white
+                        transition-all
+                        duration-200
+                        shadow-[0_4px_16px_rgba(249,115,22,0.35)]
+                        relative
+                        overflow-hidden
+                        active:scale-[0.97]
+                        active:shadow-[0_2px_8px_rgba(249,115,22,0.25)]
+                        bg-gradient-to-br from-[#f97316] to-[#ea580c]
+                    "
+                >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                        View Assigned Tasks
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </span>
+                </button>
+            </motion.div>
 
         </div>
 
