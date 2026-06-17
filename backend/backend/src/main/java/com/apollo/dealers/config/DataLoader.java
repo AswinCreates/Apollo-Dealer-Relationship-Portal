@@ -44,8 +44,36 @@ public class DataLoader {
 
                 System.out.println("==================================");
                 System.out.println(" Default Admin Created!");
+                System.out.println(" Email       : admin@apollo.com");
                 System.out.println(" Vendor Code : ADM001");
                 System.out.println(" Password    : admin123");
+                System.out.println("==================================");
+            }
+
+            if (userRepository.findByEmail("aswinrout94281@gmail.com").isEmpty()) {
+
+                User admin2 = new User();
+
+                admin2.setName("Aswin Admin");
+                admin2.setEmail("aswinrout94281@gmail.com");
+
+                // Login Credentials
+                admin2.setVendorCode("ADM002");
+                admin2.setPassword(passwordEncoder.encode("aswin@8511"));
+
+                // Role
+                admin2.setRole(UserRole.ADMIN);
+
+                // Account Status
+                admin2.setFirstLogin(false);
+                admin2.setActive(true);
+
+                userRepository.save(admin2);
+
+                System.out.println("==================================");
+                System.out.println(" Aswin Admin Created!");
+                System.out.println(" Email       : aswinrout94281@gmail.com");
+                System.out.println(" Password    : aswin@8511");
                 System.out.println("==================================");
             }
         };

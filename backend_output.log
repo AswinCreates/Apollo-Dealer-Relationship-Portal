@@ -1,0 +1,141 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.14)
+
+2026-06-16T11:38:48.766+05:30  INFO 15520 --- [backend] [           main] com.apollo.dealers.DealersApplication    : Starting DealersApplication v0.0.1-SNAPSHOT using Java 25.0.2 with PID 15520 (C:\Users\HP\OneDrive\Desktop\College\ApolloTyreLTD_Internship\dealersrelationmngt\backend\backend\target\backend-0.0.1-SNAPSHOT.jar started by HP in C:\Users\HP\OneDrive\Desktop\College\ApolloTyreLTD_Internship\dealersrelationmngt)
+2026-06-16T11:38:48.769+05:30  INFO 15520 --- [backend] [           main] com.apollo.dealers.DealersApplication    : No active profile set, falling back to 1 default profile: "default"
+2026-06-16T11:38:50.164+05:30  INFO 15520 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-16T11:38:50.289+05:30  INFO 15520 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 110 ms. Found 5 JPA repository interfaces.
+2026-06-16T11:38:51.490+05:30  INFO 15520 --- [backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-16T11:38:51.514+05:30  INFO 15520 --- [backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-16T11:38:51.515+05:30  INFO 15520 --- [backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-16T11:38:51.557+05:30  INFO 15520 --- [backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-16T11:38:51.559+05:30  INFO 15520 --- [backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2709 ms
+2026-06-16T11:38:51.775+05:30  INFO 15520 --- [backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-16T11:38:51.884+05:30  INFO 15520 --- [backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-06-16T11:38:51.934+05:30  INFO 15520 --- [backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-16T11:38:52.467+05:30  INFO 15520 --- [backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-16T11:38:52.516+05:30  INFO 15520 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-16T11:38:53.071+05:30  INFO 15520 --- [backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5a90fcaa
+2026-06-16T11:38:53.073+05:30  INFO 15520 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-16T11:38:53.203+05:30  INFO 15520 --- [backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.46
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-16T11:38:54.488+05:30  INFO 15520 --- [backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-16T11:38:54.592+05:30  INFO 15520 --- [backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-16T11:38:55.361+05:30  INFO 15520 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-06-16T11:38:55.400+05:30  WARN 15520 --- [backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-16T11:38:56.207+05:30  INFO 15520 --- [backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-16T11:38:56.238+05:30  INFO 15520 --- [backend] [           main] com.apollo.dealers.DealersApplication    : Started DealersApplication in 8.457 seconds (process running for 9.748)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-06-16T11:40:26.821+05:30  INFO 15520 --- [backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-16T11:40:26.822+05:30  INFO 15520 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-16T11:40:26.823+05:30  INFO 15520 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.email,
+        u1_0.first_login,
+        u1_0.name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.vendor_code 
+    from
+        users u1_0 
+    where
+        u1_0.email=?

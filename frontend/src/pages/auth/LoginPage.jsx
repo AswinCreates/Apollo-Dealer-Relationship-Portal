@@ -1,19 +1,35 @@
-import { motion } from "framer-motion";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Briefcase, ShieldCheck, UserCog, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/authApi";
+import apolloLogo from "../../assets/apollo-tyres.png";
+import "../../App.css";
+
+const roles = [
+  { key: "contractor", label: "Contractor", icon: Briefcase, identifierLabel: "Contractor ID", identifierPlaceholder: "Enter your contractor ID", identifierKey: "vendorCode" },
+  { key: "supervisor", label: "Supervisor", icon: ShieldCheck, identifierLabel: "Email", identifierPlaceholder: "Enter your email", identifierKey: "email" },
+  { key: "admin", label: "Admin", icon: UserCog, identifierLabel: "Email", identifierPlaceholder: "Enter your admin email", identifierKey: "email" },
+];
 
 export default function LoginPage() {
 
-const { role } = useParams();
 const navigate = useNavigate();
 
-const [vendorCode, setVendorCode] = useState("");
+const [selectedRole, setSelectedRole] = useState("contractor");
+const [identifierValue, setIdentifierValue] = useState("");
 const [password, setPassword] = useState("");
 const [showPassword, setShowPassword] = useState(false);
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState("");
+
+const currentRole = roles.find((r) => r.key === selectedRole);
+
+const handleRoleChange = (key) => {
+  setSelectedRole(key);
+  setIdentifierValue("");
+  setError("");
+};
 
 const handleLogin = async () => {
 
@@ -22,10 +38,18 @@ const handleLogin = async () => {
         setLoading(true);
         setError("");
 
-        const response = await loginUser({
-            vendorCode,
-            password
-        });
+        const payload = {
+            role: selectedRole.toUpperCase(),
+            password,
+        };
+
+        if (selectedRole === "contractor") {
+            payload.vendorCode = identifierValue;
+        } else {
+            payload.email = identifierValue;
+        }
+
+        const response = await loginUser(payload);
 
         localStorage.setItem(
             "token",
@@ -37,10 +61,11 @@ const handleLogin = async () => {
             response.data.role
         );
 
-        localStorage.setItem(
-            "vendorCode",
-            vendorCode
-        );
+        if (selectedRole === "contractor") {
+            localStorage.setItem("vendorCode", identifierValue);
+        } else {
+            localStorage.setItem("email", identifierValue);
+        }
 
         if (response.data.firstLogin) {
 
@@ -65,11 +90,16 @@ const handleLogin = async () => {
 
     } catch (err) {
 
-        setError(
-            err.response?.data ||
+        const responseData = err.response?.data;
+
+        const errorMessage =
+            (typeof responseData === "string"
+                ? responseData
+                : responseData?.message) ||
             err.message ||
-            "Login Failed"
-        );
+            "Login Failed";
+
+        setError(errorMessage);
 
     } finally {
 
@@ -79,222 +109,100 @@ const handleLogin = async () => {
 
 return (
 
-<div className="min-h-screen min-h-[100dvh] bg-[#0f172a] flex items-center justify-center p-5 relative overflow-hidden">
-
-    {/* Ambient background */}
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[30%] -right-[20%] w-[60%] h-[60%] rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)]" />
-        <div className="absolute -bottom-[20%] -left-[20%] w-[50%] h-[50%] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.07)_0%,transparent_70%)]" />
-    </div>
+<div className="auth-layout">
 
     <motion.div
-        initial={{ opacity: 0, y: 16, scale: 0.97 }}
+        initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="
-            w-full
-            max-w-[400px]
-            relative z-10
-        "
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="auth-card"
     >
 
-        {/* Back button */}
-        <button
-            onClick={() => navigate("/")}
-            className="
-                text-white/50
-                flex
-                items-center
-                gap-1.5
-                mb-7
-                text-[15px]
-                font-medium
-                transition-colors
-                duration-200
-                hover:text-white/80
-                active:text-white
-            "
-        >
-            <ArrowLeft size={18} strokeWidth={2.5} />
-            Back
-        </button>
+        {/* Logo and title */}
+        <div className="auth-header">
 
-        {/* Header */}
-        <div className="mb-8">
+            <div className="auth-logo">
+                <img src={apolloLogo} alt="Apollo Tyres" />
+            </div>
 
-            <h1 className="text-white text-[28px] font-extrabold tracking-[-0.5px] leading-tight">
-
-                {role?.charAt(0).toUpperCase() +
-                    role?.slice(1)}
-
-                {" "}Login
-
-            </h1>
-
-            <p className="text-white/40 mt-1.5 text-[14px]">
-                Sign in to continue
-            </p>
+            <h1>Apollo Tyres</h1>
+            <p>Contractor Compliance Review System</p>
 
         </div>
 
-        {/* Form card */}
-        <div className="
-            bg-white/[0.05]
-            backdrop-blur-2xl
-            border
-            border-white/[0.08]
-            rounded-[22px]
-            p-6
-            shadow-[0_8px_40px_rgba(0,0,0,0.35)]
-        ">
+        {/* Role selector tabs */}
+        <div className="role-selector">
+            <div className="role-selector-label">Select Your Role</div>
+            <div className="role-tabs">
+                {roles.map((role) => {
+                    const Icon = role.icon;
+                    return (
+                        <button
+                            key={role.key}
+                            className={`role-tab ${selectedRole === role.key ? "active" : ""}`}
+                            onClick={() => handleRoleChange(role.key)}
+                        >
+                            <Icon size={15} />
+                            {role.label}
+                        </button>
+                    );
+                })}
+            </div>
+        </div>
 
-            <div className="mb-4">
+        {/* Login form */}
+        <div className="auth-form">
 
-                <label className="block text-white/50 text-[12px] font-semibold uppercase tracking-[0.08em] mb-2 ml-1">
-                    Vendor Code
-                </label>
-
+            <div className="form-group">
+                <label className="form-label">{currentRole.identifierLabel}</label>
                 <input
                     type="text"
-                    value={vendorCode}
-                    onChange={(e) => setVendorCode(e.target.value)}
-                    placeholder="Enter your vendor code"
-                    className="
-                        w-full
-                        p-4
-                        rounded-[14px]
-                        bg-white/[0.07]
-                        border
-                        border-white/[0.1]
-                        text-white
-                        text-[16px]
-                        placeholder-white/30
-                        transition-all
-                        duration-200
-                        focus:bg-white/[0.10]
-                        focus:border-[rgba(249,115,22,0.5)]
-                        focus:shadow-[0_0_0_3px_rgba(249,115,22,0.12)]
-                    "
+                    className="form-input"
+                    value={identifierValue}
+                    onChange={(e) => setIdentifierValue(e.target.value)}
+                    placeholder={currentRole.identifierPlaceholder}
                 />
-
             </div>
 
-            <div className="mb-1">
-
-                <label className="block text-white/50 text-[12px] font-semibold uppercase tracking-[0.08em] mb-2 ml-1">
-                    Password
-                </label>
-
-                <div className="relative">
-
+            <div className="form-group">
+                <label className="form-label">Password</label>
+                <div className="form-input-icon">
                     <input
                         type={showPassword ? "text" : "password"}
+                        className="form-input"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
-                        className="
-                            w-full
-                            p-4
-                            pr-12
-                            rounded-[14px]
-                            bg-white/[0.07]
-                            border
-                            border-white/[0.1]
-                            text-white
-                            text-[16px]
-                            placeholder-white/30
-                            transition-all
-                            duration-200
-                            focus:bg-white/[0.10]
-                            focus:border-[rgba(249,115,22,0.5)]
-                            focus:shadow-[0_0_0_3px_rgba(249,115,22,0.12)]
-                        "
                     />
-
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="
-                            absolute
-                            right-4
-                            top-1/2
-                            -translate-y-1/2
-                            text-white/35
-                            p-1
-                            transition-colors
-                            duration-200
-                            hover:text-white/60
-                        "
                     >
-
-                        {
-                            showPassword
-                                ? <EyeOff size={20} />
-                                : <Eye size={20} />
-                        }
-
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
-
                 </div>
-
             </div>
 
-            {
-                error &&
-                <div className="
-                    text-[#f87171]
-                    text-[13px]
-                    font-medium
-                    mt-3
-                    p-3
-                    bg-[rgba(239,68,68,0.08)]
-                    rounded-[10px]
-                    border
-                    border-[rgba(239,68,68,0.15)]
-                ">
-
-                    {error}
-
-                </div>
-            }
-
             <button
+                className="btn-primary"
                 onClick={handleLogin}
                 disabled={loading}
-                className="
-                    w-full
-                    mt-6
-                    py-[15px]
-                    rounded-[14px]
-                    font-bold
-                    text-[16px]
-                    text-white
-                    tracking-[0.02em]
-                    transition-all
-                    duration-200
-                    shadow-[0_4px_16px_rgba(249,115,22,0.35)]
-                    relative
-                    overflow-hidden
-                    disabled:opacity-50
-                    disabled:cursor-not-allowed
-                    active:scale-[0.97]
-                    active:shadow-[0_2px_8px_rgba(249,115,22,0.25)]
-                    bg-gradient-to-br from-[#f97316] to-[#ea580c]
-                "
             >
-                <span className="relative z-10">
-                    {
-                        loading
-                            ? "Signing In..."
-                            : "Sign In"
-                    }
-                </span>
+                {loading ? "Signing In..." : "Sign In"}
             </button>
+
+            {error && (
+                <div className="error-alert" style={{ marginTop: 12 }}>
+                    {error}
+                </div>
+            )}
 
         </div>
 
     </motion.div>
 
 </div>
+
 );
+
 }

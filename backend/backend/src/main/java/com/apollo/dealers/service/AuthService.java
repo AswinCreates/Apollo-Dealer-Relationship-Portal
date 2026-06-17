@@ -29,9 +29,20 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository
-                .findByVendorCode(request.getVendorCode())
-                .orElseThrow(() -> new RuntimeException("Invalid Vendor Code"));
+        User user = null;
+        String role = request.getRole();
+
+        if (role != null && role.equalsIgnoreCase("CONTRACTOR")) {
+            // Contractor logs in with vendorCode
+            user = userRepository
+                    .findByVendorCode(request.getVendorCode())
+                    .orElseThrow(() -> new RuntimeException("Invalid Vendor Code"));
+        } else {
+            // Supervisor and Admin log in with email
+            user = userRepository
+                    .findByEmail(request.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Invalid Email"));
+        }
 
         if (!passwordEncoder.matches(
                 request.getPassword(),
@@ -40,8 +51,11 @@ public class AuthService {
             throw new RuntimeException("Invalid Password");
         }
 
-        String token = jwtService.generateToken(
-                user.getVendorCode());
+        String identifier = (role != null && role.equalsIgnoreCase("CONTRACTOR"))
+                ? user.getVendorCode()
+                : user.getEmail();
+
+        String token = jwtService.generateToken(identifier);
 
         return new LoginResponse(
                 "Login Successful",

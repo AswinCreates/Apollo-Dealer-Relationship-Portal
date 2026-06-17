@@ -1,283 +1,205 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Calendar, Clock, FileText, Upload, CheckCircle2, AlertTriangle } from "lucide-react";
+import { getContractorTasks, submitCompliance } from "../../api/submissionApi";
 
-import {
-Upload,
-FileText
-} from "lucide-react";
-
-import { uploadSubmission }
-from "../../api/submissionApi";
-
-export default function TaskDetailsPage() {
-
-const { id } = useParams();
-
-const [remarks, setRemarks] =
-    useState("");
-
-const [file, setFile] =
-    useState(null);
-
-const [loading, setLoading] =
-    useState(false);
-
-const handleSubmit = async () => {
-
-    if (!file) {
-
-        alert(
-            "Please select a document"
-        );
-
-        return;
-    }
-
-    try {
-
-        setLoading(true);
-
-        await uploadSubmission(
-            id,
-            remarks,
-            file
-        );
-
-        alert(
-            "Compliance submitted successfully"
-        );
-
-        setRemarks("");
-        setFile(null);
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Upload Failed"
-        );
-
-    } finally {
-
-        setLoading(false);
-    }
+const statusColors = {
+  PENDING: { bg: "bg-[#f97316]/15", text: "text-[#f97316]", label: "Pending" },
+  SUBMITTED: { bg: "bg-blue-500/15", text: "text-blue-400", label: "Submitted" },
+  APPROVED: { bg: "bg-green-500/15", text: "text-green-400", label: "Approved" },
+  REJECTED: { bg: "bg-red-500/15", text: "text-red-400", label: "Rejected" },
+  DELAYED: { bg: "bg-yellow-500/15", text: "text-yellow-400", label: "Delayed" },
 };
 
-return (
+export default function TaskDetailsPage() {
+  const { taskId } = useParams();
+  const navigate = useNavigate();
+  const [task, setTask] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [remarks, setRemarks] = useState("");
+  const [file, setFile] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
 
-<div className="min-h-screen min-h-[100dvh] bg-[#0f172a] relative overflow-hidden ambient-glow">
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await getContractorTasks();
+        const found = res.data.find((t) => String(t.id) === String(taskId));
+        setTask(found || null);
+      } catch (err) {
+        console.error("Task load error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [taskId]);
 
-    <div className="max-w-[400px] mx-auto px-5 pt-5 pb-28">
+  const handleSubmit = async () => {
+    if (!remarks.trim()) {
+      setToast({ type: "error", msg: "Please enter remarks before submitting" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await submitCompliance(taskId, { remarks, file });
+      setToast({ type: "success", msg: "Compliance submitted successfully!" });
+      setTimeout(() => navigate("/contractor/tasks"), 2000);
+    } catch (e) {
+      setToast({ type: "error", msg: "Submission failed. Please try again." });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-            <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-7"
-            >
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 rounded-full border-[3px] border-white/10 border-t-[#f97316] animate-spin" />
+      </div>
+    );
+  }
 
-                <h1 className="text-white text-[28px] font-extrabold tracking-[-0.5px]">
+  if (!task) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-white/30 text-[14px]">Task not found</p>
+        <button onClick={() => navigate("/contractor/tasks")} className="mt-4 text-[#f97316] text-[13px] font-semibold">Go Back</button>
+      </div>
+    );
+  }
 
-                    Submit Compliance
+  const sc = statusColors[task.status] || statusColors.PENDING;
 
-                </h1>
+  return (
+    <div className="space-y-5">
+      {/* Toast */}
+      {toast && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-[14px] text-[13px] font-semibold ${
+            toast.type === "success" ? "bg-green-500/90 text-white" : "bg-red-500/90 text-white"
+          }`}
+        >
+          {toast.type === "success" ? <CheckCircle2 size={15} className="inline mr-2" /> : <AlertTriangle size={15} className="inline mr-2" />}
+          {toast.msg}
+        </motion.div>
+      )}
 
-                <p className="text-white/40 mt-1 text-[14px]">
+      {/* Back Button */}
+      <motion.button
+        initial={{ opacity: 0, x: -12 }}
+        animate={{ opacity: 1, x: 0 }}
+        onClick={() => navigate("/contractor/tasks")}
+        className="flex items-center gap-2 text-white/50 text-[13px] font-medium hover:text-white/80 transition-colors"
+      >
+        <ArrowLeft size={18} />
+        Back to Tasks
+      </motion.button>
 
-                    Upload your compliance document
-
-                </p>
-
-            </motion.div>
-
-            {/* Form Card */}
-            <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="
-                    bg-white/[0.05]
-                    backdrop-blur-2xl
-                    border
-                    border-white/[0.08]
-                    rounded-[22px]
-                    p-6
-                    shadow-[0_8px_40px_rgba(0,0,0,0.35)]
-                "
-            >
-
-                {/* Remarks */}
-                <div className="mb-5">
-
-                    <label className="block text-white/50 text-[12px] font-semibold uppercase tracking-[0.08em] mb-2 ml-1">
-
-                        Remarks
-
-                    </label>
-
-                    <textarea
-                        rows="4"
-                        value={remarks}
-                        onChange={(e) => setRemarks(e.target.value)}
-                        placeholder="Add any notes or remarks"
-                        className="
-                            w-full
-                            rounded-[14px]
-                            p-4
-                            bg-white/[0.07]
-                            border
-                            border-white/[0.1]
-                            text-white
-                            text-[16px]
-                            placeholder-white/30
-                            transition-all
-                            duration-200
-                            resize-vertical
-                            min-h-[100px]
-                            focus:bg-white/[0.10]
-                            focus:border-[rgba(249,115,22,0.5)]
-                            focus:shadow-[0_0_0_3px_rgba(249,115,22,0.12)]
-                        "
-                    />
-
-                </div>
-
-                {/* Upload */}
-                <div className="mb-6">
-
-                    <label className="block text-white/50 text-[12px] font-semibold uppercase tracking-[0.08em] mb-2 ml-1">
-
-                        Upload File
-
-                    </label>
-
-                    <div
-                        className="
-                            mt-3
-                            border-[1.5px]
-                            border-dashed
-                            border-white/[0.15]
-                            rounded-[16px]
-                            p-7
-                            text-center
-                            cursor-pointer
-                            transition-all
-                            duration-200
-                            hover:border-[rgba(249,115,22,0.4)]
-                            hover:bg-[rgba(249,115,22,0.04)]
-                            active:scale-[0.98]
-                        "
-                    >
-
-                        <Upload
-                            className="
-                                mx-auto
-                                text-white/30
-                                mb-3
-                            "
-                            size={32}
-                        />
-
-                        <p className="text-white/40 text-[14px] font-medium">
-
-                            Tap to select a file
-
-                        </p>
-
-                        <p className="text-white/25 text-[12px] mt-1">
-
-                            PDF, DOC, DOCX, JPG, PNG
-
-                        </p>
-
-                        <input
-                            type="file"
-                            onChange={(e) => setFile(e.target.files[0])}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            style={{ position: 'relative' }}
-                        />
-
-                    </div>
-
-                    {
-                        file && (
-
-                            <div
-                                className="
-                                    mt-3
-                                    flex
-                                    items-center
-                                    gap-2.5
-                                    text-[#4ade80]
-                                    text-[14px]
-                                    font-medium
-                                    p-3
-                                    bg-[rgba(34,197,94,0.08)]
-                                    rounded-[12px]
-                                    border
-                                    border-[rgba(34,197,94,0.15)]
-                                "
-                            >
-
-                                <div className="w-8 h-8 rounded-[8px] bg-[rgba(34,197,94,0.15)] flex items-center justify-center flex-shrink-0">
-                                    <FileText size={16} />
-                                </div>
-
-                                <span className="truncate flex-1">{file.name}</span>
-
-                                <svg className="w-4 h-4 text-[#4ade80] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-
-                            </div>
-
-                        )
-                    }
-
-                </div>
-
-                {/* Submit Button */}
-                <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="
-                        w-full
-                        py-[16px]
-                        rounded-[16px]
-                        font-bold
-                        text-[16px]
-                        text-white
-                        tracking-[0.02em]
-                        transition-all
-                        duration-200
-                        shadow-[0_4px_16px_rgba(249,115,22,0.35)]
-                        relative
-                        overflow-hidden
-                        disabled:opacity-50
-                        disabled:cursor-not-allowed
-                        active:scale-[0.97]
-                        active:shadow-[0_2px_8px_rgba(249,115,22,0.25)]
-                        bg-gradient-to-br from-[#f97316] to-[#ea580c]
-                    "
-                >
-                    <span className="relative z-10">
-
-                        {
-                            loading
-                                ? "Uploading..."
-                                : "Submit Compliance"
-                        }
-
-                    </span>
-                </button>
-
-            </motion.div>
-
+      {/* Task Info Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-white/[0.06] backdrop-blur-2xl border border-white/[0.08] rounded-[20px] p-5 space-y-4"
+      >
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <h2 className="text-white text-[18px] font-bold">{task.complianceTask?.taskName || task.taskName || "Untitled Task"}</h2>
+            <p className="text-white/40 text-[13px] mt-1">Task ID: #{task.id}</p>
+          </div>
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-[10px] text-[11px] font-bold ${sc.bg} ${sc.text}`}>{sc.label}</span>
         </div>
 
-    </div>
-);
+        <div className="space-y-3 pt-2 border-t border-white/[0.06]">
+          <div className="flex items-center gap-3 text-white/50 text-[13px]">
+            <Calendar size={15} className="text-[#f97316]" />
+            <span>Due Date: {task.dueDate}</span>
+          </div>
+          <div className="flex items-center gap-3 text-white/50 text-[13px]">
+            <Clock size={15} className="text-blue-400" />
+            <span>Assigned: {task.assignedDate}</span>
+          </div>
+          {task.complianceTask?.description && (
+            <div className="flex items-start gap-3 text-white/50 text-[13px]">
+              <FileText size={15} className="text-green-400 mt-0.5" />
+              <span>{task.complianceTask.description}</span>
+            </div>
+          )}
+        </div>
+      </motion.div>
 
+      {/* Compliance Submission */}
+      {task.status === "PENDING" && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white/[0.06] backdrop-blur-2xl border border-white/[0.08] rounded-[20px] p-5 space-y-4"
+        >
+          <h3 className="text-white font-bold text-[15px]">Submit Compliance</h3>
+
+          <div className="space-y-2">
+            <label className="text-white/50 text-[12px] font-semibold">Remarks</label>
+            <textarea
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Enter your remarks..."
+              rows={4}
+              className="w-full rounded-[14px] bg-white/[0.06] border border-white/[0.08] text-white text-[14px] placeholder-white/30 p-3.5 outline-none focus:border-[#f97316]/50 transition-colors resize-none"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-white/50 text-[12px] font-semibold">Document Upload</label>
+            <label className="flex flex-col items-center justify-center w-full h-32 rounded-[16px] border-2 border-dashed border-white/[0.12] bg-white/[0.03] cursor-pointer hover:bg-white/[0.05] hover:border-white/[0.2] transition-all">
+              <Upload size={28} className="text-white/25 mb-2" />
+              <p className="text-white/35 text-[13px] font-medium">{file ? file.name : "Tap to upload document"}</p>
+              <p className="text-white/20 text-[11px] mt-1">PDF, DOC, or Images</p>
+              <input type="file" className="hidden" onChange={(e) => setFile(e.target.files[0])} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+            </label>
+            {file && (
+              <div className="flex items-center justify-between bg-white/[0.04] rounded-[12px] px-4 py-2.5 mt-2">
+                <span className="text-white/60 text-[12px] truncate">{file.name}</span>
+                <button onClick={() => setFile(null)} className="text-red-400 text-[12px] font-semibold ml-3 flex-shrink-0">Remove</button>
+              </div>
+            )}
+          </div>
+
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="w-full h-12 rounded-[14px] bg-gradient-to-r from-[#f97316] to-[#ea580c] text-white font-bold text-[14px] flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#f97316]/25 transition-all disabled:opacity-60"
+          >
+            {submitting ? (
+              <div className="w-5 h-5 rounded-full border-[2px] border-white/30 border-t-white animate-spin" />
+            ) : (
+              <>
+                <CheckCircle2 size={18} />
+                Submit Compliance
+              </>
+            )}
+          </motion.button>
+        </motion.div>
+      )}
+
+      {/* Rejection Remarks */}
+      {task.status === "REJECTED" && task.remarks && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-red-500/10 border border-red-500/20 rounded-[20px] p-5"
+        >
+          <h3 className="text-red-400 font-bold text-[15px] mb-2">Supervisor Remarks</h3>
+          <p className="text-white/60 text-[13px]">{task.remarks}</p>
+        </motion.div>
+      )}
+    </div>
+  );
 }
