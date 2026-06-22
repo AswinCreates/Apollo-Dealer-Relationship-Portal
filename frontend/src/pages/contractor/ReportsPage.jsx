@@ -61,7 +61,7 @@ export default function ReportsPage() {
   return (
     <div className="space-y-5">
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatBox icon={FileCheck} label="Complied" value={report?.complied || 0} color="bg-green-500/15 text-green-400" />
         <StatBox icon={Clock} label="Delayed" value={report?.delayed || 0} color="bg-yellow-500/15 text-yellow-400" />
         <StatBox icon={AlertTriangle} label="Not Complied" value={report?.notComplied || 0} color="bg-red-500/15 text-red-400" />

@@ -60,7 +60,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Statistics Grid */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4">
         {stats.map((s, i) => (
           <StatCard key={s.title} icon={s.icon} label={s.title} value={s.value} color={s.color} delay={0.08 + i * 0.06} />
         ))}

@@ -220,7 +220,96 @@
   margin-bottom: 16px;
 }
 
-/* App layout - authenticated pages */
+/* ================================================
+   Page Card Container (like auth-card pattern)
+   ================================================ */
+
+/* Card layout for light-themed pages (supervisor/admin) */
+.page-card-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f1f5f9 100%);
+  padding: 0 20px;
+}
+
+.page-card-layout .page-card,
+.page-card-layout-dark .page-card {
+  width: 100%;
+  max-width: 1100px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 24px auto;
+}
+
+.page-card-layout .page-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.page-card-layout .page-card-body {
+  padding: 32px;
+}
+
+/* Card layout for dark-themed pages (contractor) */
+.page-card-layout-dark {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #0c1a3a, #0e2a5c);
+  padding: 0 20px;
+}
+
+.page-card-layout-dark .page-card {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.page-card-layout-dark .page-card-body {
+  padding: 32px;
+}
+
+@media (max-width: 1024px) {
+  .page-card-layout .page-card,
+  .page-card-layout-dark .page-card {
+    max-width: 100%;
+    margin: 16px auto;
+    border-radius: 14px;
+  }
+  .page-card-layout .page-card-body,
+  .page-card-layout-dark .page-card-body {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-card-layout,
+  .page-card-layout-dark {
+    padding: 0 12px;
+  }
+  .page-card-layout .page-card,
+  .page-card-layout-dark .page-card {
+    margin: 12px auto;
+    border-radius: 12px;
+  }
+  .page-card-layout .page-card-body,
+  .page-card-layout-dark .page-card-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-card-layout .page-card-body,
+  .page-card-layout-dark .page-card-body {
+    padding: 16px;
+  }
+}
+
+/* App layout - authenticated pages (legacy) */
 .app-layout {
   min-height: 100vh;
   display: flex;
@@ -325,9 +414,15 @@
 .main-content {
   flex: 1;
   padding: 32px;
-  max-width: 1100px;
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 24px 24px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -336,6 +431,12 @@
   }
   .top-nav {
     padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 16px 12px;
   }
 }
 

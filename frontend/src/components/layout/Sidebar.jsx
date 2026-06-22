@@ -49,7 +49,7 @@ function NavContent({ collapsed, links, location, onNavigate, onLogout }) {
                   : "text-white/50 hover:text-white hover:bg-white/5"
               }`}
             >
-              <Icon size={18} className={collapsed ? "mx-auto" : ""} />
+              <Icon size={18} className={collapsed ? "mx-auto" : "flex-shrink-0"} />
               {!collapsed && <span>{link.label}</span>}
             </button>
           );
@@ -61,7 +61,7 @@ function NavContent({ collapsed, links, location, onNavigate, onLogout }) {
           onClick={onLogout}
           className="flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[13px] font-medium text-red-400 hover:bg-red-500/10 w-full transition-all"
         >
-          <LogOut size={18} />
+          <LogOut size={18} className="flex-shrink-0" />
           {!collapsed && <span>Logout</span>}
         </button>
       </div>
@@ -82,13 +82,16 @@ export default function Sidebar({ collapsed, onToggle, role = "admin" }) {
 
   return (
     <>
-      {/* Mobile Toggle */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-3 left-3 z-50 w-9 h-9 rounded-[10px] bg-white shadow-md flex items-center justify-center text-gray-600"
-      >
-        <Menu size={18} />
-      </button>
+      {/* Mobile Toggle - hidden when drawer is open */}
+      {!mobileOpen && (
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="lg:hidden fixed top-3 left-3 z-40 w-9 h-9 rounded-[10px] bg-white shadow-md flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu size={18} />
+        </button>
+      )}
 
       {/* Mobile Drawer */}
       <AnimatePresence>
@@ -105,13 +108,15 @@ export default function Sidebar({ collapsed, onToggle, role = "admin" }) {
               animate={{ x: 0 }}
               exit={{ x: -300 }}
               transition={{ type: "spring", damping: 25 }}
-              className="absolute left-0 top-0 bottom-0 w-[280px] bg-[#1a1d29] flex flex-col p-4"
+              className="absolute left-0 top-0 bottom-0 w-[280px] bg-[#1a1d29] flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={() => setMobileOpen(false)} className="self-end text-white/50 mb-4">
-                <X size={22} />
-              </button>
-              <NavContent {...navProps} />
+              <div className="flex items-center justify-end p-3 border-b border-white/10">
+                <button onClick={() => setMobileOpen(false)} className="w-9 h-9 rounded-[10px] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+              <NavContent {...navProps} collapsed={false} links={links} />
             </motion.div>
           </motion.div>
         )}
@@ -130,7 +135,8 @@ export default function Sidebar({ collapsed, onToggle, role = "admin" }) {
         {/* Collapse Toggle */}
         <button
           onClick={onToggle}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors z-50"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <ChevronLeft size={14} className={`transition-transform ${collapsed ? "rotate-180" : ""}`} />
         </button>

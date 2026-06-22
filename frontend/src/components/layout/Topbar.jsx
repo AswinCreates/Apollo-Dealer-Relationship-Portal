@@ -7,8 +7,8 @@ export default function Topbar({ title, onNotifClick }) {
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
-      <div className="h-16 px-6 flex items-center justify-between">
-        <h1 className="text-[16px] sm:text-[18px] font-bold text-gray-800 truncate">{title}</h1>
+      <div className="h-16 px-4 sm:px-6 flex items-center justify-between lg:ml-0 ml-10">
+        <h1 className="text-[15px] sm:text-[18px] font-bold text-gray-800 truncate">{title}</h1>
 
         <div className="flex items-center gap-4">
           <button
