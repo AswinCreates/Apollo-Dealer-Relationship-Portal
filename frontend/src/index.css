@@ -9,10 +9,10 @@
   --bg: #f8fafc;
   --bg-card: #ffffff;
   --border: #e2e8f0;
-  --accent: #f97316;
-  --accent-hover: #ea580c;
-  --accent-light: #fff7ed;
-  --accent-border: #fed7aa;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-light: #f5f3ff;
+  --accent-border: #ddd6fe;
   --success: #22c55e;
   --danger: #ef4444;
   --warning: #eab308;
@@ -112,7 +112,7 @@ input, textarea, select {
 
 /* Selection */
 ::selection {
-  background: rgba(249, 115, 22, 0.2);
+  background: rgba(124, 58, 237, 0.2);
   color: var(--text-h);
 }
 

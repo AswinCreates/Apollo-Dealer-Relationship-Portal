@@ -12,6 +12,7 @@ import SubmissionsPage from "../pages/contractor/SubmissionsPage";
 import ProfilePage from "../pages/contractor/ProfilePage";
 import ReportsPage from "../pages/contractor/ReportsPage";
 import NotificationsPage from "../pages/contractor/NotificationsPage";
+import FirstLoginSetup from "../pages/contractor/FirstLoginSetup";
 
 // Supervisor
 import DashboardLayout from "../components/layout/DashboardLayout";
@@ -41,6 +42,7 @@ function AppRoutes() {
 
         {/* Contractor Routes */}
         <Route path="/contractor" element={<ContractorLayout />}>
+          <Route path="first-login" element={<FirstLoginSetup />} />
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="tasks" element={<MyTasksPage />} />
           <Route path="tasks/:taskId" element={<TaskDetailsPage />} />

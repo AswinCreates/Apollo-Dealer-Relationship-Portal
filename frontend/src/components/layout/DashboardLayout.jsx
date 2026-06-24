@@ -28,7 +28,7 @@ export default function DashboardLayout({ role = "admin" }) {
   const title = rawTitle || (role === "supervisor" ? "Supervisor Panel" : "Admin Panel");
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Fixed Sidebar */}
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} role={role} />
 
@@ -46,7 +46,7 @@ export default function DashboardLayout({ role = "admin" }) {
           />
         </div>
 
-        {/* Page Content - Card container like login page */}
+        {/* Page Content - Purple themed card */}
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

@@ -29,10 +29,10 @@ function NavContent({ collapsed, links, location, onNavigate, onLogout }) {
   return (
     <>
       <div className={`flex items-center gap-2.5 px-4 py-2 ${collapsed ? "justify-center" : ""}`}>
-        <div className="w-7 h-7 rounded-[7px] bg-[#E31E24] flex items-center justify-center flex-shrink-0">
-          <img src={apolloLogo} alt="Apollo" className="w-4 h-4 object-contain" />
+        <div className="w-8 h-8 rounded-[10px] bg-gradient-to-br from-[#7c3aed] to-[#8b5cf6] flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/25">
+          <img src={apolloLogo} alt="Apollo" className="w-5 h-5 object-contain" />
         </div>
-        {!collapsed && <span className="text-white font-bold text-[13px]">Apollo Tyres</span>}
+        {!collapsed && <span className="text-white font-bold text-[14px]">Apollo Tyres</span>}
       </div>
 
       <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -45,7 +45,7 @@ function NavContent({ collapsed, links, location, onNavigate, onLogout }) {
               onClick={() => { onNavigate(link.path); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[13px] font-medium transition-all ${
                 active
-                  ? "bg-white/15 text-white"
+                  ? "bg-white/15 text-white shadow-lg shadow-purple-900/20"
                   : "text-white/50 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -82,11 +82,11 @@ export default function Sidebar({ collapsed, onToggle, role = "admin" }) {
 
   return (
     <>
-      {/* Mobile Toggle - hidden when drawer is open */}
+      {/* Mobile Toggle */}
       {!mobileOpen && (
         <button
           onClick={() => setMobileOpen(true)}
-          className="lg:hidden fixed top-3 left-3 z-40 w-9 h-9 rounded-[10px] bg-white shadow-md flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
+          className="lg:hidden fixed top-3 left-3 z-40 w-10 h-10 rounded-[10px] bg-white shadow-lg flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
           aria-label="Open menu"
         >
           <Menu size={18} />
@@ -108,7 +108,7 @@ export default function Sidebar({ collapsed, onToggle, role = "admin" }) {
               animate={{ x: 0 }}
               exit={{ x: -300 }}
               transition={{ type: "spring", damping: 25 }}
-              className="absolute left-0 top-0 bottom-0 w-[280px] bg-[#1a1d29] flex flex-col"
+              className="absolute left-0 top-0 bottom-0 w-[280px] bg-[#1e1b4b] flex flex-col shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-end p-3 border-b border-white/10">
@@ -124,7 +124,7 @@ export default function Sidebar({ collapsed, onToggle, role = "admin" }) {
 
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:flex flex-col bg-[#1a1d29] fixed left-0 top-0 bottom-0 z-40 transition-all duration-300 ${
+        className={`hidden lg:flex flex-col bg-[#1e1b4b] fixed left-0 top-0 bottom-0 z-40 transition-all duration-300 ${
           collapsed ? "w-[70px]" : "w-[240px]"
         }`}
       >

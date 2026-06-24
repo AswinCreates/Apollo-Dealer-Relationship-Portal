@@ -1,88 +1,80 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { User, Lock, Info, Save } from "lucide-react";
+import { Save, Bell, Shield, Palette } from "lucide-react";
 
 export default function AdminSettings() {
-  const [profile, setProfile] = useState({ name: "Admin User", email: "admin@apollo.com" });
-  const [password, setPassword] = useState({ current: "", newPass: "", confirm: "" });
-  const [toast, setToast] = useState(null);
-
-  const handleProfileSave = () => {
-    setToast({ type: "success", msg: "Profile updated successfully" });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const handlePasswordSave = () => {
-    if (password.newPass !== password.confirm) { setToast({ type: "error", msg: "Passwords do not match" }); }
-    else { setToast({ type: "success", msg: "Password changed successfully" }); setPassword({ current: "", newPass: "", confirm: "" }); }
-    setTimeout(() => setToast(null), 3000);
-  };
+  const [saved, setSaved] = useState(false);
+  const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      {toast && (
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
-          className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-[10px] text-[13px] font-semibold shadow-lg ${toast.type === "success" ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}>
-          {toast.msg}
-        </motion.div>
-      )}
+    <div className="space-y-5">
+      <div className="rounded-[20px] p-5 bg-gradient-to-r from-[#7c3aed] to-[#8b5cf6]">
+        <h2 className="text-white text-[22px] font-extrabold">Settings</h2>
+        <p className="text-white/70 text-[13px] mt-1">Manage portal configuration</p>
+      </div>
 
-      {/* Profile Section */}
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-[15px] font-bold text-gray-800 mb-5 flex items-center gap-2"><User size={18} /> Profile</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-[12px] font-semibold text-gray-500 uppercase mb-1.5">Full Name</label>
-            <input type="text" value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-              className="w-full h-10 border border-gray-200 rounded-[10px] px-3 text-[13px] text-gray-700 outline-none focus:border-[#E31E24]" />
-          </div>
-          <div>
-            <label className="block text-[12px] font-semibold text-gray-500 uppercase mb-1.5">Email</label>
-            <input type="email" value={profile.email} onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-              className="w-full h-10 border border-gray-200 rounded-[10px] px-3 text-[13px] text-gray-700 outline-none focus:border-[#E31E24]" />
-          </div>
-        </div>
-        <button onClick={handleProfileSave} className="mt-5 flex items-center gap-2 px-5 py-2.5 rounded-[10px] bg-[#E31E24] text-white text-[13px] font-bold hover:bg-red-700 transition-colors">
-          <Save size={15} /> Save Profile
+      <div className="space-y-4">
+        {[
+          {
+            icon: Shield,
+            title: "Security Settings",
+            desc: "Password policy, 2FA, session timeout",
+            fields: ["Enable Two-Factor Authentication", "Session Timeout (minutes)"],
+          },
+          {
+            icon: Bell,
+            title: "Notification Settings",
+            desc: "Email and SMS notification preferences",
+            fields: ["Email notifications", "SMS alerts", "Daily digest"],
+          },
+          {
+            icon: Palette,
+            title: "Portal Settings",
+            desc: "Branding and display preferences",
+            fields: ["Portal name", "Primary color", "Logo URL"],
+          },
+        ].map((section, idx) => {
+          const Icon = section.icon;
+          return (
+            <motion.div
+              key={section.title}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.08 }}
+              className="bg-white rounded-[18px] border border-gray-200 shadow-sm p-5"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-[12px] bg-purple-100 text-[#7c3aed] flex items-center justify-center">
+                  <Icon size={20} />
+                </div>
+                <div>
+                  <h3 className="text-gray-900 font-bold text-[15px]">{section.title}</h3>
+                  <p className="text-gray-500 text-[12px]">{section.desc}</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {section.fields.map((field) => (
+                  <div key={field} className="flex items-center justify-between">
+                    <span className="text-gray-700 text-[13px] font-medium">{field}</span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#7c3aed]"></div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+        <button
+          onClick={handleSave}
+          className="w-full py-3 bg-gradient-to-r from-[#7c3aed] to-[#8b5cf6] text-white font-semibold rounded-[12px] flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-purple-500/25 transition-all"
+        >
+          <Save size={16} /> {saved ? "Saved!" : "Save Settings"}
         </button>
-      </motion.div>
-
-      {/* Change Password Section */}
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-[15px] font-bold text-gray-800 mb-5 flex items-center gap-2"><Lock size={18} /> Change Password</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-[12px] font-semibold text-gray-500 uppercase mb-1.5">Current Password</label>
-            <input type="password" value={password.current} onChange={(e) => setPassword({ ...password, current: e.target.value })}
-              className="w-full h-10 border border-gray-200 rounded-[10px] px-3 text-[13px] text-gray-700 outline-none focus:border-[#E31E24]" />
-          </div>
-          <div>
-            <label className="block text-[12px] font-semibold text-gray-500 uppercase mb-1.5">New Password</label>
-            <input type="password" value={password.newPass} onChange={(e) => setPassword({ ...password, newPass: e.target.value })}
-              className="w-full h-10 border border-gray-200 rounded-[10px] px-3 text-[13px] text-gray-700 outline-none focus:border-[#E31E24]" />
-          </div>
-          <div>
-            <label className="block text-[12px] font-semibold text-gray-500 uppercase mb-1.5">Confirm New Password</label>
-            <input type="password" value={password.confirm} onChange={(e) => setPassword({ ...password, confirm: e.target.value })}
-              className="w-full h-10 border border-gray-200 rounded-[10px] px-3 text-[13px] text-gray-700 outline-none focus:border-[#E31E24]" />
-          </div>
-        </div>
-        <button onClick={handlePasswordSave} className="mt-5 flex items-center gap-2 px-5 py-2.5 rounded-[10px] bg-[#E31E24] text-white text-[13px] font-bold hover:bg-red-700 transition-colors">
-          <Save size={15} /> Update Password
-        </button>
-      </motion.div>
-
-      {/* System Info */}
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-[15px] font-bold text-gray-800 mb-5 flex items-center gap-2"><Info size={18} /> System Information</h3>
-        <div className="space-y-3">
-          {[["Application", "Apollo Tyres Compliance Portal"], ["Version", "1.0.0"], ["Environment", "Production"], ["Last Updated", "2026-06-17"]].map(([k, v]) => (
-            <div key={k} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
-              <span className="text-[13px] text-gray-500 font-medium">{k}</span>
-              <span className="text-[13px] text-gray-700 font-semibold">{v}</span>
-            </div>
-          ))}
-        </div>
       </motion.div>
     </div>
   );

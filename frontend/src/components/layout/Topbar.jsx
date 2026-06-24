@@ -19,7 +19,7 @@ export default function Topbar({ title, onNotifClick }) {
           </button>
 
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#E31E24] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7c3aed] to-[#8b5cf6] flex items-center justify-center shadow-lg shadow-purple-500/25">
               <User size={14} className="text-white" />
             </div>
             <span className="text-[13px] font-medium text-gray-600 hidden sm:block">User</span>

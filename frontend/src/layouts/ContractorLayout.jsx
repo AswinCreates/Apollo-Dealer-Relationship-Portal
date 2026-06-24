@@ -1,7 +1,8 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import BottomNav from "../components/BottomNav";
-import "../../src/App.css";
+import apolloLogo from "../assets/apollo-tyres.png";
+import "../App.css";
 
 const pageTitles = {
   "/contractor/dashboard": "Dashboard",
@@ -22,9 +23,9 @@ export default function ContractorLayout() {
 
   return (
     <div className="page-card-layout-dark">
-      {/* Card Container - like login card pattern */}
+      {/* Card Container */}
       <div className="page-card">
-        {/* Card Body with animated content */}
+        {/* Card Body */}
         <div className="page-card-body">
           <AnimatePresence mode="wait">
             <motion.div
@@ -34,8 +35,35 @@ export default function ContractorLayout() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
             >
-              {/* Page title */}
-              <h1 className="text-white font-bold text-[20px] sm:text-[24px] mb-5">{title}</h1>
+              {/* Page Header with logo + title */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                marginBottom: "24px",
+                paddingBottom: "16px",
+                borderBottom: "1px solid rgba(255,255,255,0.08)"
+              }}>
+                <div style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, #7c3aed, #8b5cf6)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0
+                }}>
+                  <img src={apolloLogo} alt="Apollo" style={{ width: "22px", height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+                </div>
+                <h1 style={{
+                  fontSize: "clamp(18px, 4vw, 24px)",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  margin: 0
+                }}>{title}</h1>
+              </div>
+
               <Outlet />
             </motion.div>
           </AnimatePresence>
